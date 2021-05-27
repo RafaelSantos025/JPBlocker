@@ -6,9 +6,12 @@
     "author":"Joao & Rafa S.A",
     "browser_action":{
         "default_title":"J.P Blocker",
-        "default_popup":"html/index.html",
+        "default_popup":"content/index.html",
         "default_icon":"icon.png" 
     },
+    "permissions":[
+        "activeTab"
+    ],
     "content_scripts":[
         {
             "matches":[
@@ -16,8 +19,9 @@
                 "https://*/*"
             ],
             "js":[
-                "js/main.js"
+                "content/main.js"
             ]
         }
-    ]
+    ],
+    "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com https://www.googletagmanager.com; object-src 'self'"
 }
