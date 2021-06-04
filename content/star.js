@@ -17,6 +17,24 @@ function changeStartsCollor(star){
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    var sendButton = document.getElementById("sendBtn");
+    sendButton.addEventListener('click', function() {
+        var stars = document.getElementById('rating').innerHTML.toString();
+        var comment = document.getElementById('comment').value.toString();
+        if (stars != "0"){
+            db.collection("rate").add({
+                stars:stars,
+                comment:comment
+            }).then((docRef) => {
+                console.log("Document written with ID: ", docRef.id);
+            }).catch((error) => {
+                console.error("Error adding document: ", error);
+            });
+        }
+    }, false);
+}, false);
+
+document.addEventListener('DOMContentLoaded', function() {
     var starButton = document.getElementById("btn1");
     starButton.addEventListener('click', function() {
         rate(1);
@@ -48,5 +66,13 @@ document.addEventListener('DOMContentLoaded', function() {
     var starButton = document.getElementById("btn5");
     starButton.addEventListener('click', function() {
         rate(5);
+    }, false);
+}, false);
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var starButton = document.getElementById("switchButton");
+    starButton.addEventListener('click', function() {
+        switchButton();
     }, false);
 }, false);
