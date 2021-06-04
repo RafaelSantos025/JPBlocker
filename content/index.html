@@ -5,17 +5,31 @@
         </title>
         <link rel="stylesheet" href="./css/extension.css">
         <script src="star.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-firestore.js"></script>
+        <script src="firebase.js"></script>
+        <script src="main.js"></script>
     </head>
     <body>
-        <h3>Content Blocker</h3>
-        
+        <h3>J.P Content Blocker</h3>
+
+        <label class="switch" id="switchButton">
+            <input type="checkbox">
+            <span class="slider round"></span>
+        </label>
+        <br>
+
         <a id="btn1"><img src="images/star0.png" id="s1"></a>
         <a id="btn2"><img src="images/star0.png" id="s2"></a>
         <a id="btn3"><img src="images/star0.png" id="s3"></a>
         <a id="btn4"><img src="images/star0.png" id="s4"></a>
         <a id="btn5"><img src="images/star0.png" id="s5"></a>
+
+        <form class="commentForm">
+            <input class="inputForm" id="comment" type="text">
+        </form>
+
+        <button id="sendBtn"> send </button>
         <p id="rating">0</p>
     </body>
 </html>
