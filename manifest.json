@@ -11,11 +11,11 @@
     },
     "permissions":[
         "activeTab",
-        "tabs"
+        "storage"
     ],
     "background": {
         "page": "content/index.html",
-        "persistent": false
+        "persistent": true
     },
     "content_scripts":[
         {
