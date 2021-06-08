@@ -1,19 +1,24 @@
 
-sleepTime = 3000;
+sleepTime = 2300;
 blockServersUrlsList = ["https://raw.githubusercontent.com/easylist/easylist/master/easylist/easylist_adservers.txt", "https://raw.githubusercontent.com/easylistbrasil/easylistbrasil/master/easylistbrasil/adservers.txt"];
 htmlTagsList = ["img", "video", "iframe", "embed", "object", "source"];
 bypassServers = ["github", window.location.hostname.toString()]
 listsReady = 0;
 listsNumber = blockServersUrlsList.length;
 loops = 0;
-maxLoops = 5;
+maxLoops = 15;
 serverList = [];
-jpOn = true;
+jpOn = null;
 
 function main(){
+    firstRun();
     getBlockedServers(blockServersUrlsList);
 
     startJP();
+    setInterval(() => {
+        changeDesign();
+    }, 300);
+
     setInterval(() => {
         if (loops < maxLoops){
             startJP();
@@ -21,38 +26,54 @@ function main(){
     }, sleepTime);
 }
 
-function startJP(){
-    loops += 1;
-    console.log("JP: " + loops.toString());
-    if(listsReady == listsNumber){
-        htmlTagsList.forEach((tag) => {
-            if (jpOn){
-                blockAds(serverList, tag);
-            }
-        });
+function firstRun(){
+    getPower();
+    if (jpOn === undefined){
+        jpOn = true;
     }
 }
 
-function switchButton(){
-    if (jpOn){
-        jpOn = false;
+function changeDesign(){
+    getPower();
+    try{
+        if (jpOn === false){
+            document.getElementById("buttonText").innerText = "OFF";
+        }else{
+            document.getElementById("buttonText").innerText = "ON";
+        }
+    }catch{}
+}
+
+function powerButton(){
+    getPower();
+    if (jpOn === true){
+        changePower(false);
     }else{
-        jpOn = true;
+        changePower(true);
         loops = 0;
     }
 }
 
-function checkServer(server){
-    server = server.replace(" ", "").replace("\n", "").replace("\r", "").replace("\t", "");
+function changePower(energy){
+    chrome.storage.local.set({"jpOn": energy}, function() {});
+}
 
-    if(server==""){
-        return false;
-    }
-    if(!server.includes(".")){
-        return false;
-    }
+function getPower(){
+    chrome.storage.local.get(['jpOn'], function(result) {
+        jpOn = result.jpOn;
+    });
+}
 
-    return true;
+function startJP(){
+    if (jpOn === true){
+        console.log("JP: " + loops.toString());
+        loops += 1;
+        if(listsReady == listsNumber){
+            htmlTagsList.forEach((tag) => {
+                blockAds(tag);
+            });
+        }
+    }
 }
 
 function checkUrl(url){
@@ -63,7 +84,6 @@ function checkUrl(url){
     for (i=0; i<bypassServers.length; i++){
         s =  bypassServers[i];
         if (url.includes(s)){
-            console.log("BYPASSED: " + url);
             return false;
         }
     }
@@ -78,8 +98,8 @@ function parseResponse(response){
     splited.forEach((s) => {
         if (s.includes("||")){
             server = s.replace("||", "").split("^")[0].split("/")[0];
-            if (checkServer(server)){
-                strServerList += server + ","
+            if (server != ""){
+                strServerList += server + ",";
             }
         }
     });
@@ -105,14 +125,14 @@ function getBlockedServers(urls){
     });
 }
 
-function blockAds(bannedAdsServers, htmlTag){
+function blockAds(htmlTag){
     imgTags = document.querySelectorAll(htmlTag);
 
     imgTags.forEach((tag) => {
         if (htmlTag == "object" && tag.data != undefined){
             if (checkUrl(tag.data.toString())){
-                for (i=0; i<bannedAdsServers.length; i++){
-                    server = bannedAdsServers[i];
+                for (i=0; i<serverList.length; i++){
+                    server = serverList[i];
                     if (tag.data.toString().includes(server)){
                         console.log("BLOCKED: " + tag.data.toString());
                         tag.data = "";
@@ -125,9 +145,12 @@ function blockAds(bannedAdsServers, htmlTag){
             url = tag.src.toString();
             
             if (checkUrl(tag.src.toString())){
-                for (i=0; i<bannedAdsServers.length; i++){
-                    server = bannedAdsServers[i];
-                    if (tag.src.toString().includes(server)){
+                for (i=0; i<serverList.length; i++){
+                    server = serverList[i];
+                    if (server === "" || server === null){
+                        continue;
+                    }
+                    else if (tag.src.toString().includes(server)){
                         console.log("BLOCKED: " + tag.src.toString());
                         tag.src = "";
                         break;
@@ -137,5 +160,13 @@ function blockAds(bannedAdsServers, htmlTag){
         }
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    var switchButton = document.getElementById("switchButton");
+    switchButton.addEventListener('click', function() {
+        powerButton();
+        changeDesign();
+    }, false);
+}, false);
 
 main();
