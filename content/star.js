@@ -68,11 +68,3 @@ document.addEventListener('DOMContentLoaded', function() {
         rate(5);
     }, false);
 }, false);
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    var starButton = document.getElementById("switchButton");
-    starButton.addEventListener('click', function() {
-        switchButton();
-    }, false);
-}, false);
