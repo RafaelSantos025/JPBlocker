@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var sendButton = document.getElementById("sendBtn");
     sendButton.addEventListener('click', function() {
         var comment = document.getElementById('comment').value.toString();
-        if (lastRatedStars != "0"){
+        if (lastRatedStars != 0){
             db.collection("rate").add({
                 stars:lastRatedStars,
                 comment:comment
@@ -49,8 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('comment').value = "";
             changeStartsCollor(0);
             alert("Obrigado por nos avaliar."); 
+            lastRatedStars = 0;
         }else{
-            alert("Por favor selecione um numero de estrelas."); 
+            alert("Por favor, selecione um número de estrelas."); 
         }
     }, false);
 }, false);
