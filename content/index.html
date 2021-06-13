@@ -11,23 +11,32 @@
         <script src="main.js"></script>
     </head>
     <body>
-        <h3>J.P Content Blocker</h3>
-
-        <button class="switchButton" id="switchButton"><b id="buttonText">ON</b></button>
+        <div class="JPTitle">
         <br>
-
-        <p>Por favor, avalie nosso aplicativo:</p>
-        <a id="btn1"><img src="images/star0.png" id="s1"></a>
-        <a id="btn2"><img src="images/star0.png" id="s2"></a>
-        <a id="btn3"><img src="images/star0.png" id="s3"></a>
-        <a id="btn4"><img src="images/star0.png" id="s4"></a>
-        <a id="btn5"><img src="images/star0.png" id="s5"></a>
-
-        <form class="commentForm">
-            <input class="inputForm" id="comment" type="text">
-        </form>
-
-        <div style="align-content: center;"><button id="sendBtn"> Enviar </button></div>
-        <p id="rating">0</p>
+        <h2 style="display:inline"><b>J.P Content Blocker</b>&nbsp;&nbsp;&nbsp;</h2>
+        </div>
+        <div class="switchButtonContainer">
+            <button class="switchButton" id="switchButton" style="border: none; background: black; font-weight: bold; font-size: 16px;"><b id="buttonText">ON</b></button>
+        </div>
+        <h4 style="display:inline; font-size: 14px;">Propagandas bloqueadas: </h4> <p id="reportText" style="display:inline"></p></p>
+        <br>
+        <div class="rate">
+            <h2 style="text-align: center; margin-top: 1%; color: rgb(0, 0, 0);"> Nos Avalie </h2>
+            <div class="stars">
+                <a id="btn1" class="starButton"><img src="images/star0.png" id="s1"></a>
+                <a id="btn2" class="starButton"><img src="images/star0.png" id="s2"></a>
+                <a id="btn3" class="starButton"><img src="images/star0.png" id="s3"></a>
+                <a id="btn4" class="starButton"><img src="images/star0.png" id="s4"></a>
+                <a id="btn5" class="starButton"><img src="images/star0.png" id="s5"></a>
+            </div>
+            <div class="commentBox">
+                <form class="commentForm">
+                    <textarea class="inputForm" id="comment" type="text"></textarea>
+                </form>
+            </div>
+            <div class="sendButtonDiv">
+                <button id="sendBtn" class="sendButton"> <b style="margin-top: 20%; margin-bottom: 20%; font-size: 16px;">Enviar</b> </button><br>
+            </div>
+        </div>
     </body>
 </html>
