@@ -1,14 +1,17 @@
 
-sleepTime = 2300;
+sleepTime = 2500;
 blockServersUrlsList = ["https://raw.githubusercontent.com/easylist/easylist/master/easylist/easylist_adservers.txt", "https://raw.githubusercontent.com/easylistbrasil/easylistbrasil/master/easylistbrasil/adservers.txt"];
 htmlTagsList = ["img", "video", "iframe", "embed", "object", "source"];
 bypassServers = ["github", window.location.hostname.toString()]
+ignoreCurrentServers = ["www.google.com", "github"]
 listsReady = 0;
 listsNumber = blockServersUrlsList.length;
-loops = 0;
-maxLoops = 15;
+loops = 1;
+maxLoops = 16;
 serverList = [];
 jpOn = null;
+contextBlockedAds = 0;
+storedBlockedAds = 0;
 
 function main(){
     firstRun();
@@ -17,31 +20,39 @@ function main(){
     startJP();
     setInterval(() => {
         changeDesign();
-    }, 300);
+    }, 1000);
 
     setInterval(() => {
         if (loops < maxLoops){
             startJP();
+            putBlockedAds();
         }
     }, sleepTime);
 }
 
 function firstRun(){
+    getBlockedAds();
     getPower();
     if (jpOn === undefined){
         jpOn = true;
+    }else{
+        changeDesign();
     }
 }
 
 function changeDesign(){
     getPower();
     try{
+        var btn = document.getElementById("buttonText");
         if (jpOn === false){
-            document.getElementById("buttonText").innerText = "OFF";
+            btn.innerText = "OFF";
+            btn.setAttribute("style", "color: #ff0000");
         }else{
-            document.getElementById("buttonText").innerText = "ON";
+            btn.innerText = "ON";
+            btn.setAttribute("style", "color: #4CAF50;");
         }
-    }catch{}
+    }catch(err){
+    }
 }
 
 function powerButton(){
@@ -58,14 +69,44 @@ function changePower(energy){
     chrome.storage.local.set({"jpOn": energy}, function() {});
 }
 
-function getPower(){
-    chrome.storage.local.get(['jpOn'], function(result) {
-        jpOn = result.jpOn;
+function getBlockedAds(){
+    chrome.storage.local.get(['blockAds'], function(result) {
+        storedBlockedAds = result.blockAds;
+        if (result.blockAds === undefined){
+            chrome.storage.local.set({"blockAds": 0}, function() {});
+        }
     });
 }
 
+function putBlockedAds(){
+    getBlockedAds();
+    var currentAds = contextBlockedAds + storedBlockedAds;
+    chrome.storage.local.set({"blockAds": currentAds}, function() {});
+}
+
+function getPower(){
+    chrome.storage.local.get(['jpOn'], function(result) {
+        if (result.jpOn === undefined){
+            jpOn = true;
+            changePower(true);
+        }else{
+            jpOn = result.jpOn;
+        }
+    });
+}
+
+function checkCurrentUrl(){
+    for (i=0; i<ignoreCurrentServers.length; i++){
+        server = ignoreCurrentServers[i];
+        if(window.location.hostname.includes(server)){
+            return false
+        }
+    }
+    return true;
+}
+
 function startJP(){
-    if (jpOn === true){
+    if (jpOn === true && checkCurrentUrl()){
         console.log("JP: " + loops.toString());
         loops += 1;
         if(listsReady == listsNumber){
@@ -135,6 +176,7 @@ function blockAds(htmlTag){
                     server = serverList[i];
                     if (tag.data.toString().includes(server)){
                         console.log("BLOCKED: " + tag.data.toString());
+                        contextBlockedAds = contextBlockedAds+1;
                         tag.data = "";
                         break;
                     }
@@ -152,6 +194,7 @@ function blockAds(htmlTag){
                     }
                     else if (tag.src.toString().includes(server)){
                         console.log("BLOCKED: " + tag.src.toString());
+                        contextBlockedAds = contextBlockedAds+1;
                         tag.src = "";
                         break;
                     }
