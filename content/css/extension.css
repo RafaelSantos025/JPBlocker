@@ -1,22 +1,88 @@
 body {
     min-width: 300;
+    min-height: 330;
+    background-color: rgb(97, 97, 238);
+    background-image: url(https://i.pinimg.com/564x/ee/03/3a/ee033a5d2e537a3b9a033d495f9ba424.jpg);
+}
+
+.JPTitle{
+    border-radius: 6px;
+    border-width: 2px;
+    border-style: solid;
+    border-color:black;
+    display: flex;
+    justify-content: center;
 }
 
 .commentForm{
     width: 88%;
-    height: 88;
+    min-height: 70%;
+}
+
+.rate{
+
+    align-self: center;
+    border-radius: 6px;
+    border-width: 2px;
+    border-style: solid;
+    border-color:black;
+}
+
+.stars{
+    display: flex;
+    margin-left: 4%;
+    justify-content: center;
+    margin-bottom: 3%;
+}
+
+.switchButtonContainer{
+    display: flex;
+    margin-top: 4%;
+    justify-content: start;
+    margin-left: 1%;
+    margin-bottom: 3%;
+}
+
+.starButton{
+    width: 15%;
+    margin-left: 0%;
+    margin-right: 0%;
+}
+
+.commentBox{
+    display: flex;
+    justify-content: center;
+    min-height: 36%;
 }
 
 .inputForm{
     width: 100%;
     height: 100%;
     text-align: start;
-}
-
-.buttonImage{
-  max-width: 7%;
+    border-width: 2px;
+    border-style: solid;
+    border-color:black;
 }
 
 .switchButton{
-    max-width: 20%;
+    max-width: 50%;
+    border-radius: 3px;
+    border: 1px solid #E8E8E8;
+}
+
+.sendButtonDiv{
+    margin-left: 7%;
+    margin-right: 7%;
+    margin-bottom: 2%;
+}
+
+.sendButton{
+    border-radius: 3px;
+    border: 2px solid #E8E8E8;
+    border: none; 
+    width: 100%;
+    background: black; 
+    font-weight: bold;
+    color: #FFFFFF;
+    margin-bottom: 2%;
 }
