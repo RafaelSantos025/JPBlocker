@@ -1,6 +1,9 @@
+var blockedAds = 0;
+var lastRatedStars = 0;
+
 function rate(star) {
-    changeStartsCollor(star);
-    document.getElementById('rating').innerHTML = star.toString();   
+    lastRatedStars = star;
+    changeStartsCollor(star);  
 }
 
 function changeStartsCollor(star){
@@ -16,20 +19,38 @@ function changeStartsCollor(star){
     }
 }
 
+function getBlockedAds(){
+    chrome.storage.local.get(['blockAds'], function(result) {
+        blockedAds = result.blockAds;
+    });
+}
+
+function printBlockedAds(){
+    try{
+        getBlockedAds();
+        document.getElementById("reportText").innerText = blockedAds;
+    }catch{
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     var sendButton = document.getElementById("sendBtn");
     sendButton.addEventListener('click', function() {
-        var stars = document.getElementById('rating').innerHTML.toString();
         var comment = document.getElementById('comment').value.toString();
-        if (stars != "0"){
+        if (lastRatedStars != "0"){
             db.collection("rate").add({
-                stars:stars,
+                stars:lastRatedStars,
                 comment:comment
             }).then((docRef) => {
                 console.log("Document written with ID: ", docRef.id);
             }).catch((error) => {
                 console.error("Error adding document: ", error);
             });
+            document.getElementById('comment').value = "";
+            changeStartsCollor(0);
+            alert("Obrigado por nos avaliar."); 
+        }else{
+            alert("Por favor selecione um numero de estrelas."); 
         }
     }, false);
 }, false);
@@ -68,3 +89,8 @@ document.addEventListener('DOMContentLoaded', function() {
         rate(5);
     }, false);
 }, false);
+
+printBlockedAds();
+setInterval(() => {
+    printBlockedAds();
+}, 500);
